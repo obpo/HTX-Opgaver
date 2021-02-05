@@ -15,8 +15,6 @@ float b = 0;
 
 void setup() {
   fullScreen();
-  // vi vælger en font som skrifttype
-  PFont font = createFont("arial", 24);
 
   // Kontakt til ConptrolP5 Biblioteket - initieringen
   cp5 = new ControlP5(this);
