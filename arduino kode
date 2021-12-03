@@ -1,0 +1,81 @@
+
+volatile uint8_t timer[7] = {0, 0, 0, 0, 0, 0, 0};
+
+void setup() { 
+  // put your setup code here, to run once:
+  InterruptSetup();
+  Serial.begin(9600);
+}
+
+void InterruptSetup() {
+  noInterrupts();
+  TCNT1 = 0;
+
+  TCCR1A |= 0b00000000;
+  TCCR1B |= 0b00001100;
+
+  OCR1A = 624;
+  //OCR1B = 0;
+
+  TIMSK1 |= 0b00000010; // Compare
+  //TIMSK1 |= 0b00000001; // Overflow
+
+  interrupts();
+  
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:
+
+  Serial.print(timer[0]);
+  Serial.print(":");
+  Serial.print(timer[1]);
+  Serial.print(timer[2]);
+  Serial.print(":");
+  Serial.print(timer[3]);
+  Serial.print(timer[4]);
+  Serial.print(".");
+  Serial.print(timer[5]);
+  Serial.println(timer[6]);
+  
+
+}
+
+ISR(TIMER1_COMPA_vect) {
+  timer[6] += 1;
+
+  if (timer[6] == 10) {
+    timer[6] = 0;
+    timer[5] += 1;
+
+    if (timer[5] == 10) {
+      timer[5] = 0;
+      timer[4] += 1;
+
+      if (timer[4] == 10) {
+        timer[4] = 0;
+        timer[3] += 1;
+
+        if (timer[3] == 6) {
+          timer[3] = 0;
+          timer[2] += 1;
+
+          if (timer[2] == 10) {
+            timer[2] = 0;
+            timer[1] += 1;
+
+            if (timer[1] == 6) {
+              timer[1] = 0;
+              timer[0] += 1;
+
+            }
+          }
+        }
+      }
+    }
+  }
+
+  //Serial.println("Hello World");
+  //OCR1A = 64886;
+  
+}
